@@ -1,0 +1,3 @@
+rvm use 1.9.3-p0 --default
+rvm --create use default@msg_receiver
+echo "Change to current rvm: msg_receiver"

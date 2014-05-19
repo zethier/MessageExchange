@@ -1,0 +1,10 @@
+source :rubygems
+
+gem 'sinatra'
+gem 'shotgun'
+gem 'haml'
+gem 'thin'
+
+gem 'json'
+gem 'mongo'
+gem 'bson_ext'

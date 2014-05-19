@@ -1,0 +1,4 @@
+source :rubygem
+
+gem "json"
+gem 'rest-client'
