@@ -3,7 +3,9 @@
 require 'json'
 require 'rest-client'
 
-get "/" do 
+require 'sinatra'
+
+# get "/" do 
   # post json data
   message = {
     :date => "2014-05-15",
@@ -14,5 +16,7 @@ get "/" do
     :logsNewestTS => 16
   }.to_json
   
-  RestClient.Post 'http://localhost:7654/incoming', {:data => message}, {:content_type => :json}
-end
+  p message
+  
+  RestClient.post 'http://localhost:7654/incoming', {:data => message}, {:content_type => :json}
+# end
