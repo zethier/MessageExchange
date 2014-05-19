@@ -7,6 +7,7 @@
 require 'sinatra'
 require 'haml'
 require 'mongo'
+require 'json'
 
 MSG_COLLECTION = "msg_collection"
 
@@ -34,8 +35,11 @@ get '/incoming' do
 end
 
 post '/incoming' do
-  request.body.rewind
-  
-  puts request.body.read
+  request.body.rewind  # # in case someone already read it
   # payload = JSON.parse request.body.read 
+
+  # p request.body.read
+  payload = JSON.parse(request.body.read)
+  puts payload
+
 end
