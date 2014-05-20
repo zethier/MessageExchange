@@ -9,19 +9,35 @@ require 'haml'
 require 'mongo'
 require 'json'
 
-MSG_COLLECTION = "msg_collection"
+MSG_DB = "msg_exchange_database"
+MSG_DATA_COLLECTION = "msg_data"
 
 # create a separate collection to collect scan data
 # Run once at startup
+
+# running MongoDB with ruby
+# https://github.com/mongodb/mongo-ruby-driver/wiki/Tutorial
 configure do 
+  puts "Start Configuration"
+  
   # Create a new MongoClient instance.
   # MongoClient = function(server, options);
-  mongo_msg_host = 'localhost'
-  mongo_msg_port = '27017' # default port :27017
+  mongo_msg_host = "localhost"
+  mongo_msg_port = 27017 # default port :27017
   
-  # @@mongo_msg_client = Mongo::MongoClient.new(mongo_msg_host, mongo_msg_port)
-  # @@mongo_msg_db = @@mongo_msg_client.db(DB)
-  # @@mongo_msg_collection = Mongo::MongoClient.db(MSG_COLLECTION)
+  # make a connection "@@msg_collection"
+  @@msg_conn = Mongo::MongoClient.new(mongo_msg_host, mongo_msg_port)
+
+  puts @@msg_conn.database_names  
+  @@msg_conn.database_info.each {|info| puts info.inspect}
+
+  # using MongoClient instant to obtain a Mongo::DB instance
+  @@msg_db = @@msg_conn.db(MSG_DB)  
+  
+  # create collections in Mongo::DB
+  @@msg_collection = @@msg_db.collection(MSG_DATA_COLLECTION)
+  
+  puts "Done Configuration"
 end
 
 get '/' do
@@ -40,6 +56,10 @@ post '/incoming' do
 
   # p request.body.read
   payload = JSON.parse(request.body.read)
-  puts payload
+  
+  # insert documentation into collection
+  msg_id = @@msg_collection.insert(payload)
 
+  puts "Getting incoming data: #{payload}, collection id: #{msg_id}"  
 end
+
